@@ -1,7 +1,16 @@
 import { FormProps, FormSchema } from '/@/components/Table';
 import { BasicColumn } from '/@/components/Table/src/types/table';
-import dayjs from 'dayjs';
 
+const basicOptions: LabelValueOptions = [
+  {
+    label: '付晓晓',
+    value: '1',
+  },
+  {
+    label: '周毛毛',
+    value: '2',
+  },
+];
 export function getBasicColumns(): BasicColumn[] {
   return [
     {
@@ -35,7 +44,6 @@ export function getBasicColumns(): BasicColumn[] {
       width: 150,
       sorter: true,
       dataIndex: 'beginTime',
-      customRender: (text: any) => <span>{dayjs(text.value).format('YYYY-MM-DD')}</span>,
     },
     {
       title: '结束时间',
@@ -46,117 +54,9 @@ export function getBasicColumns(): BasicColumn[] {
   ];
 }
 
-export function getBasicShortColumns(): BasicColumn[] {
-  return [
-    {
-      title: 'ID',
-      width: 150,
-      dataIndex: 'id',
-      sorter: true,
-      sortOrder: 'ascend',
-    },
-    {
-      title: '姓名',
-      dataIndex: 'name',
-      width: 120,
-    },
-    {
-      title: '地址',
-      dataIndex: 'address',
-    },
-    {
-      title: '编号',
-      dataIndex: 'no',
-      width: 80,
-    },
-  ];
-}
+type ProtoTest = { text: any; index: number };
 
-export function getMultipleHeaderColumns(): BasicColumn[] {
-  return [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      width: 200,
-    },
-    {
-      title: '姓名',
-      dataIndex: 'name',
-      width: 120,
-    },
-    {
-      title: '地址',
-      dataIndex: 'address',
-      sorter: true,
-      children: [
-        {
-          title: '编号',
-          dataIndex: 'no',
-          width: 120,
-          filters: [
-            { text: 'Male', value: 'male', children: [] },
-            { text: 'Female', value: 'female', children: [] },
-          ],
-        },
-
-        {
-          title: '开始时间',
-          dataIndex: 'beginTime',
-          width: 120,
-        },
-        {
-          title: '结束时间',
-          dataIndex: 'endTime',
-          width: 120,
-        },
-      ],
-    },
-  ];
-}
-
-export function getCustomHeaderColumns(): BasicColumn[] {
-  return [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      width: 200,
-    },
-    {
-      // title: '姓名',
-      dataIndex: 'name',
-      width: 120,
-      slots: { title: 'customTitle' },
-    },
-    {
-      // title: '地址',
-      dataIndex: 'address',
-      width: 120,
-      slots: { title: 'customAddress' },
-      sorter: true,
-    },
-
-    {
-      title: '编号',
-      dataIndex: 'no',
-      width: 120,
-      filters: [
-        { text: 'Male', value: 'male', children: [] },
-        { text: 'Female', value: 'female', children: [] },
-      ],
-    },
-    {
-      title: '开始时间',
-      dataIndex: 'beginTime',
-      width: 120,
-    },
-    {
-      title: '结束时间',
-      dataIndex: 'endTime',
-      width: 120,
-    },
-  ];
-}
-const renderContent = ({ text, index }: { text: any; index: number }) => {
+const renderContent = ({ text, index }: ProtoTest) => {
   const obj: any = {
     children: text,
     attrs: {},
@@ -243,12 +143,23 @@ export function getFormConfig(): Partial<FormProps> {
   return {
     labelWidth: 100,
     schemas: [
-      ...getAdvanceSchema(5),
+      ...getAdvanceSchema(2),
+      {
+        field: `id`,
+        label: `ID`,
+        component: 'Input',
+        colProps: {
+          xl: 12,
+          xxl: 8,
+        },
+      },
       {
         field: `field11`,
-        label: `Slot示例`,
+        label: `Select示例`,
         component: 'Select',
-        slot: 'custom',
+        componentProps: {
+          options: basicOptions,
+        },
         colProps: {
           xl: 12,
           xxl: 8,
@@ -273,36 +184,5 @@ export function getBasicData() {
     }
     return arr;
   })();
-  return data;
-}
-
-export function getTreeTableData() {
-  const data: any = (() => {
-    const arr: any = [];
-    for (let index = 0; index < 40; index++) {
-      arr.push({
-        id: `${index}`,
-        name: 'John Brown',
-        age: `1${index}`,
-        no: `${index + 10}`,
-        address: 'New York No. 1 Lake ParkNew York No. 1 Lake Park',
-        beginTime: new Date().toLocaleString(),
-        endTime: new Date().toLocaleString(),
-        children: [
-          {
-            id: `l2-${index}`,
-            name: 'John Brown',
-            age: `1${index}`,
-            no: `${index + 10}`,
-            address: 'New York No. 1 Lake ParkNew York No. 1 Lake Park',
-            beginTime: new Date().toLocaleString(),
-            endTime: new Date().toLocaleString(),
-          },
-        ],
-      });
-    }
-    return arr;
-  })();
-
   return data;
 }

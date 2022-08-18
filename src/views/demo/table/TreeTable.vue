@@ -29,6 +29,12 @@
               return { disabled: false };
             }
           },
+          onSelect(record: Recordable) {
+            console.log(record);
+          },
+          onChange(selectedRowKeys: (string | number)[]) {
+            console.log(selectedRowKeys);
+          },
         },
         titleHelpMessage: '树形组件不能和序列号列同时存在',
         columns: getBasicColumns(),

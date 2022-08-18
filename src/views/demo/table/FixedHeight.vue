@@ -30,7 +30,7 @@
         api: demoListApi,
         columns: getCustomHeaderColumns(),
         canResize: false,
-        scroll: { y: 100 },
+        scroll: { y: 200 },
       });
 
       return {

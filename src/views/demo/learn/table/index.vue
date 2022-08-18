@@ -1,6 +1,9 @@
 <template>
   <div class="p-4">
-    <BasicTable @register="registerTable">
+    <BasicTable
+      @register="registerTable"
+      :rowSelection="{ type: 'checkbox', selectedRowKeys: checkedKeys, onChange: onSelectChange }"
+    >
       <template #action="{ record }">
         <TableAction
           :actions="[
@@ -21,62 +24,49 @@
           ]"
         />
       </template>
+      <template #toolbar>
+        <a-button type="primary" @click="getFormValues">获取表单数据</a-button>
+      </template>
     </BasicTable>
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
-  import { BasicTable, useTable, BasicColumn, TableAction } from '/@/components/Table';
+  import { defineComponent, ref } from 'vue';
+  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { getBasicColumns, getFormConfig } from './tableData';
 
   import { demoListApi } from '/@/api/demo/table';
-  const columns: BasicColumn[] = [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      fixed: 'left',
-      width: 280,
-    },
-    {
-      title: '姓名',
-      dataIndex: 'name',
-      width: 260,
-    },
-    {
-      title: '地址',
-      dataIndex: 'address',
-    },
-    {
-      title: '编号',
-      dataIndex: 'no',
-      width: 300,
-    },
-    {
-      title: '开始时间',
-      width: 200,
-      dataIndex: 'beginTime',
-    },
-    {
-      title: '结束时间',
-      dataIndex: 'endTime',
-      width: 200,
-    },
-  ];
+
   export default defineComponent({
     components: { BasicTable, TableAction },
     setup() {
-      const [registerTable] = useTable({
-        title: 'TableAction组件及固定列示例',
+      const checkedKeys = ref<Array<string | number>>([]);
+      const [registerTable, { getForm }] = useTable({
+        title: '开启搜索区域',
         api: demoListApi,
-        columns: columns,
-        rowSelection: { type: 'radio' },
-        bordered: true,
+        columns: getBasicColumns(),
         actionColumn: {
           width: 160,
           title: 'Action',
           dataIndex: 'action',
           slots: { customRender: 'action' },
         },
+        useSearchForm: true,
+        formConfig: getFormConfig(),
+        showTableSetting: true,
+        tableSetting: { fullScreen: true },
+        showIndexColumn: false,
+        rowKey: 'id',
       });
+
+      function getFormValues() {
+        console.log(getForm().getFieldsValue());
+      }
+
+      function onSelectChange(selectedRowKeys: (string | number)[]) {
+        console.log(selectedRowKeys);
+        checkedKeys.value = selectedRowKeys;
+      }
       function handleDelete(record: Recordable) {
         console.log('点击了删除', record);
       }
@@ -85,6 +75,9 @@
       }
       return {
         registerTable,
+        getFormValues,
+        checkedKeys,
+        onSelectChange,
         handleDelete,
         handleOpen,
       };

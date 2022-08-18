@@ -55,17 +55,16 @@
     </CollapseContainer>
   </PageWrapper>
 </template>
-<script lang="ts">
-  import { computed, defineComponent, unref, ref } from 'vue';
+<script lang="ts" setup>
+  import { computed, unref, ref } from 'vue';
   import { BasicForm, FormSchema, ApiSelect } from '/@/components/Form/index';
   import { CollapseContainer } from '/@/components/Container';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { PageWrapper } from '/@/components/Page';
 
   import { optionsListApi } from '/@/api/demo/select';
-  import { useDebounceFn } from '@vueuse/core';
   import { treeOptionsListApi } from '/@/api/demo/tree';
-  import { Select } from 'ant-design-vue';
+  import { Select as ASelect } from 'ant-design-vue';
   import { cloneDeep } from 'lodash-es';
 
   const valueSelectA = ref<string[]>([]);
@@ -631,37 +630,20 @@
     },
   ];
 
-  export default defineComponent({
-    components: { BasicForm, CollapseContainer, PageWrapper, ApiSelect, ASelect: Select },
-    setup() {
-      const check = ref(null);
-      const { createMessage } = useMessage();
-      const keyword = ref<string>('');
-      const searchParams = computed<Recordable>(() => {
-        return { keyword: unref(keyword) };
-      });
-
-      function onSearch(value: string) {
-        keyword.value = value;
-      }
-      return {
-        schemas,
-        optionsListApi,
-        optionsA,
-        optionsB,
-        valueSelectA,
-        valueSelectB,
-        onSearch: useDebounceFn(onSearch, 300),
-        searchParams,
-        handleReset: () => {
-          keyword.value = '';
-        },
-        handleSubmit: (values: any) => {
-          console.log('values', values);
-          createMessage.success('click search,values:' + JSON.stringify(values));
-        },
-        check,
-      };
-    },
+  const { createMessage } = useMessage();
+  const keyword = ref<string>('');
+  const searchParams = computed<Recordable>(() => {
+    return { keyword: unref(keyword) };
   });
+
+  function onSearch(value: string) {
+    keyword.value = value;
+  }
+  const handleReset = () => {
+    keyword.value = '';
+  };
+  const handleSubmit = (values: any) => {
+    console.log('values', values);
+    createMessage.success('click search,values:' + JSON.stringify(values));
+  };
 </script>
