@@ -119,6 +119,7 @@ export function getCustomHeaderColumns(): BasicColumn[] {
     {
       title: 'ID',
       dataIndex: 'id',
+      helpMessage: 'headerHelpMessage方式1',
       width: 200,
     },
     {
@@ -258,7 +259,7 @@ export function getFormConfig(): Partial<FormProps> {
   };
 }
 export function getBasicData() {
-  const data: any = (() => {
+  return (() => {
     const arr: any = [];
     for (let index = 0; index < 40; index++) {
       arr.push({
@@ -273,11 +274,10 @@ export function getBasicData() {
     }
     return arr;
   })();
-  return data;
 }
 
 export function getTreeTableData() {
-  const data: any = (() => {
+  return (() => {
     const arr: any = [];
     for (let index = 0; index < 40; index++) {
       arr.push({
@@ -303,6 +303,4 @@ export function getTreeTableData() {
     }
     return arr;
   })();
-
-  return data;
 }
